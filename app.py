@@ -1,10 +1,12 @@
 from flask import Flask, render_template, request, jsonify
-import tensorflow as tf
+from tensorflow import keras
 import numpy as np
 from PIL import Image
 import io
 import base64
 import os
+from werkzeug.middleware.proxy_fix import ProxyFix
+
 
 app = Flask(__name__)
 
@@ -15,7 +17,7 @@ app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1)
 # --- AIモデルの読み込み ---
 model_path = 'my_number_brain.keras'
 if os.path.exists(model_path):
-    model = tf.keras.models.load_model(model_path)
+    model = keras.models.load_model(model_path)
     print("AIモデル読み込み完了！")
 else:
     print("エラー: 学習済みモデルが見つかりません。")
