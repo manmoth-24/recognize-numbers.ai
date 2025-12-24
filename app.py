@@ -67,8 +67,9 @@ def predict():
         })
 
     except Exception as e:
-        print(f"エラー: {e}")
-        return jsonify({'prediction': 'Error', 'confidence': 0})
+        print(f"エラー詳細: {e}")
+        # エラーの中身をそのまま画面に返す
+        return jsonify({'prediction': f'Err: {str(e)}', 'confidence': 0})
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
