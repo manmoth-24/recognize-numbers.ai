@@ -7,12 +7,22 @@ import base64
 import os
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-
 app = Flask(__name__)
 
 # 【重要】Renderなどのプロキシ下で動かすための設定
 # x_for=1 は "X-Forwarded-For ヘッダーを1階層分信頼する" という意味です
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1)
+
+
+# Flaskの例
+@app.route('/api/move', methods=['POST'])
+def move():
+    # ここに書いておけば、アクセスが来た瞬間に勝手に実行されます
+    client_ip = request.remote_addr 
+    print(f"アクセスがありました！ IP: {client_ip}") 
+    
+    # 以下、ゲームの処理...
+    return "OK"
 
 # --- AIモデルの読み込み ---
 model_path = 'my_number_brain.keras'
@@ -59,15 +69,6 @@ def predict():
         'confidence': confidence
     })
 
-# Flaskの例
-@app.route('/api/move', methods=['POST'])
-def move():
-    # ここに書いておけば、アクセスが来た瞬間に勝手に実行されます
-    client_ip = request.remote_addr 
-    print(f"アクセスがありました！ IP: {client_ip}") 
-    
-    # 以下、ゲームの処理...
-    return "OK"
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
